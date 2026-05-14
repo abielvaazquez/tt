@@ -1,0 +1,466 @@
+import { useState, useRef } from "react";
+import { motion, AnimatePresence, useScroll, useTransform } from "motion/react";
+import { ChevronRight, ChevronLeft } from "lucide-react";
+
+export default function Home() {
+  const [activeSpec, setActiveSpec] = useState(0);
+
+  const containerRef = useRef<HTMLDivElement>(null);
+  const sliderRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"]
+  });
+
+  const motorScale = useTransform(scrollYProgress, [0.3, 0.5, 0.7], [0.95, 1.05, 1]);
+  const motorY = useTransform(scrollYProgress, [0.3, 0.7], [40, -40]);
+  const textOpacity = useTransform(scrollYProgress, [0.35, 0.5, 0.65, 0.8], [0, 0.25, 0.25, 0]);
+  const textScale = useTransform(scrollYProgress, [0.3, 0.8], [0.7, 1.8]);
+
+  const { scrollX } = useScroll({ container: sliderRef });
+  const carouselPadding = useTransform(scrollX, [0, 150], ["200px", "24px"]);
+  const leftButtonOpacity = useTransform(scrollX, [0, 50], [0, 1]);
+  const leftButtonPointerEvents = useTransform(scrollX, (v) => v > 10 ? "auto" : "none");
+
+  const specs = [
+    {
+      category: "Aerodinámica",
+      title: "Resistencia",
+      description: "Cada curva del Modelo TT está diseñada para cortar el aire con un coeficiente de arrastre líder en la industria de 0.208 Cd.",
+      stats: [
+        { label: "Arrastre", value: "0.208 Cd" },
+        { label: "Ventilación", value: "Activa" }
+      ]
+    },
+    {
+      category: "Propulsión",
+      title: "Tri-Motor Plaid",
+      description: "Tres motores eléctricos de alto rendimiento con rotores recubiertos de carbono para una potencia continua hasta la velocidad máxima.",
+      stats: [
+        { label: "Motores", value: "3" },
+        { label: "Torque", value: "1,420 Nm" }
+      ]
+    },
+    {
+      category: "Arquitectura",
+      title: "Plataforma de 800V",
+      description: "Sistema de batería de última generación con refrigeración líquida dual, optimizado para cargar 300km en solo 15 minutos.",
+      stats: [
+        { label: "Carga", value: "350 kW" },
+        { label: "Eficiencia", value: "98%" }
+      ]
+    },
+    {
+      category: "Control",
+      title: "Frenado Regenerativo",
+      description: "Capas de cerámica de carbono y un software de gestión térmica que permite paradas precisas y recuperación de energía extrema.",
+      stats: [
+        { label: "Material", value: "Cerámica" },
+        { label: "Recuperación", value: "Hasta 250kW" }
+      ]
+    }
+  ];
+
+  const scrollSlider = (direction: "left" | "right") => {
+    if (sliderRef.current) {
+      const scrollAmount = sliderRef.current.offsetWidth * 0.7;
+      sliderRef.current.scrollBy({
+        left: direction === "left" ? -scrollAmount : scrollAmount,
+        behavior: "smooth"
+      });
+    }
+  };
+
+  return (
+    <div className="bg-white font-sans text-[#171a20] overflow-x-hidden">
+      {/* Hero Section */}
+      <section className="relative min-h-screen flex flex-col items-center pt-28 pb-12 text-center px-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.2 }}
+          className="z-10"
+        >
+          <h1 className="text-4xl md:text-6xl font-semibold tracking-tight mb-2">
+            <span className="md:hidden">TT Concept</span>
+            <span className="hidden md:block">Modelo TT</span>
+          </h1>
+          <p className="text-sm tracking-wide text-[#171a20]/70 cursor-pointer hover:text-[#171a20] transition-colors">
+            Siente el futuro del rendimiento
+          </p>
+        </motion.div>
+
+        <div className="flex-1 w-full flex items-center justify-center relative mt-4">
+          <div className="absolute w-[800px] h-[300px] bg-gradient-to-b from-gray-100 to-transparent rounded-[100%] blur-3xl opacity-40 -z-10"></div>
+          <motion.img
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1.2, ease: "easeOut" }}
+            src="https://res.cloudinary.com/dpynwjc8f/image/upload/f_auto,q_auto/Diseño_sin_título_10_ix7wxa"
+            alt="Modelo TT"
+            className="w-full max-w-5xl md:max-w-6xl lg:max-w-7xl object-contain drop-shadow-2xl rounded-[3rem]"
+          />
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.8 }}
+          className="w-full max-w-4xl flex flex-col items-center space-y-10 mt-8"
+        >
+          <div className="flex gap-8 md:gap-20 items-end justify-center w-full">
+            <div className="text-center">
+              <div className="text-2xl md:text-3xl font-semibold">1,000<span className="text-lg ml-1 font-normal">km</span></div>
+              <div className="text-[10px] uppercase tracking-widest text-[#171a20]/50 mt-1">Autonomía</div>
+            </div>
+            <div className="text-center border-x border-gray-200 px-8 md:px-20">
+              <div className="text-2xl md:text-3xl font-semibold">8.1<span className="text-lg ml-1 font-normal">s</span></div>
+              <div className="text-[10px] uppercase tracking-widest text-[#171a20]/50 mt-1">0-100 km/h</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl md:text-3xl font-semibold">259<span className="text-lg ml-1 font-normal">hp</span></div>
+              <div className="text-[10px] uppercase tracking-widest text-[#171a20]/50 mt-1 whitespace-nowrap">Potencia</div>
+            </div>
+          </div>
+
+          <div className="flex flex-col items-center justify-center gap-6 w-full">
+            <button className="px-12 md:px-32 py-3 border-[3px] border-[#171a20] rounded text-sm font-bold uppercase tracking-widest hover:bg-[#171a20] hover:text-white transition-all bg-white shadow-lg active:scale-95 cursor-pointer">
+              Contactar
+            </button>
+          </div>
+        </motion.div>
+      </section>
+
+      {/* Detail Section - Storage */}
+      <section className="bg-gray-50 border-t border-gray-100 py-32 px-12">
+        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-16">
+          <div className="w-full lg:w-1/3">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
+              <h2 className="text-3xl font-semibold mb-6">Diseñado para el Barrio</h2>
+              <p className="text-stone-600 leading-relaxed text-sm mb-8 max-w-sm">
+                La ciudad es dura, pero tu coche lo es más. Combinamos la mejor tecnología con un diseño resistente que aguanta el ritmo de cualquier calle. No es solo un medio para moverte; es tu estilo marcado en cada esquina.
+              </p>
+              <button className="group flex items-center space-x-2 text-sm font-bold uppercase tracking-widest cursor-pointer">
+                <span className="border-b-2 border-transparent group-hover:border-[#171a20] transition-all">Más información</span>
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </motion.div>
+          </div>
+          
+          <div className="flex-1 flex flex-col sm:flex-row gap-6">
+            <div className="flex-1 bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm flex flex-col group">
+              <div className="h-48 overflow-hidden">
+                <img 
+                  src="https://i.postimg.cc/h45grYy0/Disen-o-sin-ti-tulo-(6).png"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                  alt="Cargo space"
+                />
+              </div>
+              <div className="p-4 text-[11px] font-bold uppercase tracking-tighter text-[#171a20]/40">Espacio de Carga Trasera</div>
+            </div>
+            <div className="flex-1 bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm flex flex-col group">
+              <div className="h-48 overflow-hidden">
+                <img 
+                  src="https://i.postimg.cc/8Pn57Hr1/Disen-o-sin-ti-tulo-(7).png"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                  alt="Seating"
+                />
+              </div>
+              <div className="p-4 text-[11px] font-bold uppercase tracking-tighter text-[#171a20]/40">Configuración de Asientos</div>
+            </div>
+            <div className="flex-1 bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm flex flex-col group">
+              <div className="h-48 overflow-hidden">
+                <img 
+                  src="https://i.postimg.cc/KjT4Dy28/Disen-o-sin-ti-tulo-(2).png"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                  alt="Hands-free liftgate"
+                  referrerPolicy="no-referrer"
+                />
+              </div>
+              <div className="p-4 text-[11px] font-bold uppercase tracking-tighter text-[#171a20]/40">Ahorro en Gasolina</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Interactive Spec Explorer */}
+      <section className="bg-[#f0f0f0] py-32 px-12 overflow-hidden border-t border-gray-200">
+        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-16">
+          <div className="w-full lg:w-3/5 relative group">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="relative"
+            >
+              <img 
+                src="https://i.postimg.cc/wTpgtN7J/Disen-o-sin-ti-tulo-(4).png"
+                alt="Technical View"
+                className="w-full h-auto drop-shadow-[0_20px_50px_rgba(0,0,0,0.15)] grayscale-[0.5]"
+              />
+              <Hotspot x={20} y={45} label="Plataforma" active={activeSpec === 0} onClick={() => setActiveSpec(0)} />
+              <Hotspot x={75} y={55} label="Motor" active={activeSpec === 1} onClick={() => setActiveSpec(1)} />
+              <Hotspot x={50} y={50} label="Bateria" active={activeSpec === 2} onClick={() => setActiveSpec(2)} />
+              <Hotspot x={23} y={70} label="Freno" active={activeSpec === 3} onClick={() => setActiveSpec(3)} />
+            </motion.div>
+          </div>
+
+          <div className="w-full lg:w-2/5 flex flex-col justify-center min-h-[400px]">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeSpec}
+                initial={{ opacity: 0, x: 30, filter: "blur(10px)" }}
+                animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+                exit={{ opacity: 0, x: -30, filter: "blur(10px)" }}
+                transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                className="bg-white/60 backdrop-blur-xl p-10 rounded-[2.5rem] border border-white shadow-[0_20px_50px_rgba(0,0,0,0.05)]"
+              >
+                <h2 className="text-xs font-mono uppercase tracking-[0.4em] text-gray-400 mb-4">{specs[activeSpec].category}</h2>
+                <h3 className="text-3xl font-semibold mb-6 tracking-tight">{specs[activeSpec].title}</h3>
+                <p className="text-gray-500 leading-relaxed mb-8 text-sm">{specs[activeSpec].description}</p>
+                <div className="grid grid-cols-2 gap-8">
+                  {specs[activeSpec].stats.map((stat, idx) => (
+                    <div key={idx} className="group/stat">
+                      <div className="text-2xl font-bold tracking-tight text-[#171a20] transition-transform group-hover/stat:translate-x-1 duration-300">{stat.value}</div>
+                      <div className="text-[10px] uppercase tracking-widest text-gray-400 font-bold mt-1">{stat.label}</div>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+            </AnimatePresence>
+            <div className="flex justify-center gap-4 mt-8">
+              {specs.map((_, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setActiveSpec(idx)}
+                  className={`w-12 h-1 rounded-full transition-all duration-300 ${activeSpec === idx ? "bg-[#171a20]" : "bg-gray-300 hover:bg-gray-400"}`}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Grid Features */}
+      <section className="py-32 px-6">
+        <div className="max-w-7xl mx-auto">
+           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <FeatureCard 
+                 title="Seguridad"
+                 description="El Modelo TT está diseñado para brindar la máxima protección en todas las condiciones."
+                 img="https://acnews.blob.core.windows.net/imgnews/extralarge/NAZ_ac718c7522644f5e9768c7758a18d5cf.jpg"
+              />
+              <FeatureCard 
+                 title="Velocidad"
+                 description="Aceleración que te dejará sin aliento, redefiniendo lo que un motor eléctrico puede hacer."
+                 img="https://i.postimg.cc/vZpCxFmf/Disen-o-sin-ti-tulo-(5).png"
+              />
+              <FeatureCard 
+                 title="Tecnología"
+                 description="Software que se actualiza constantemente para ofrecer nuevas funciones y mejoras."
+                 img="https://i.postimg.cc/KjT4Dy28/Disen-o-sin-ti-tulo-(2).png"
+              />
+           </div>
+        </div>
+      </section>
+
+      {/* Electric Section */}
+      <section ref={containerRef} className="relative h-[105vh] bg-black overflow-hidden border-t border-white/5">
+        <div className="sticky top-0 h-screen flex items-center justify-center">
+          <div className="relative z-10 w-full max-w-4xl px-6 flex flex-col items-center">
+            <motion.div style={{ scale: motorScale, y: motorY }} className="relative w-full">
+              <img 
+                src="https://i.postimg.cc/FH6XbC91/Captura-de-pantalla-2026-05-14-a-la(s)-12-23-27-a-m.png" 
+                alt="Electric Motor Architecture"
+                className="w-full h-auto drop-shadow-[0_0_150px_rgba(255,255,255,0.15)] rounded-[2rem]"
+              />
+              <div className="absolute inset-x-0 top-1/2 h-1 bg-blue-500/30 blur-2xl -z-10" />
+            </motion.div>
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="mt-16 text-center">
+              <p className="text-gray-500 text-xs font-mono tracking-[0.5em] uppercase mb-4">Ingeniería Avanzada</p>
+              <h4 className="text-white text-3xl font-light tracking-tight">Potencia Pura. <span className="font-bold">Cero Emisiones.</span></h4>
+            </motion.div>
+          </div>
+          <motion.div style={{ opacity: textOpacity, scale: textScale }} className="absolute inset-0 flex items-center justify-center pointer-events-none z-20 overflow-visible">
+            <h2 className="text-[22vw] font-black leading-none text-white tracking-tighter uppercase whitespace-nowrap">Eléctrico</h2>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Security Section */}
+      <section className="bg-white py-32 px-6 border-t border-gray-100">
+        <div className="max-w-7xl mx-auto flex flex-col items-center">
+          <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="w-full max-w-5xl mb-16 overflow-hidden rounded-[2.5rem] shadow-[0_50px_100px_-20px_rgba(0,0,0,0.15)] bg-slate-100">
+            <img 
+              src="https://i.postimg.cc/59DK0TSJ/Disen-o-sin-ti-tulo-(11).png" 
+              alt="Security Architecture"
+              className="w-full h-auto object-cover grayscale-[0.2] hover:grayscale-0 transition-all duration-700"
+              referrerPolicy="no-referrer"
+            />
+          </motion.div>
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.2 }} className="text-left w-full max-w-4xl">
+            <p className="text-[#171a20]/40 text-xs font-mono tracking-[0.5em] uppercase mb-4">Seguridad Avanzada</p>
+            <h2 className="text-4xl md:text-5xl font-semibold tracking-tighter mb-8 italic">La seguridad viene de serie</h2>
+            <div className="text-stone-500 leading-relaxed text-lg font-light space-y-6">
+              <p>La seguridad en TT es primordial. Cada vehículo TT está diseñado con zonas de absorción de impactos, un compartimiento de pasajeros rígido para minimizar la intrusión y múltiples bolsas de aire para ayudar a proteger a los ocupantes.</p>
+              <p>Las funciones de seguridad activa pueden reducir la gravedad del impacto o evitar los accidentes por completo. La alerta de colisión frontal, el frenado de emergencia activo y la prevención de salida de carril vienen de serie.</p>
+              <p>Los sistemas de seguridad pasiva y activa están diseñados para hacer que los vehículos TT sean los más seguros del mundo, con una probabilidad muy baja de lesiones.</p>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Hecho en México Section */}
+      <section className="bg-white py-12 overflow-hidden border-t border-gray-100">
+        <motion.div style={{ paddingLeft: carouselPadding }} className="max-w-7xl mx-auto pr-6 mb-4">
+          <motion.div initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="max-w-3xl">
+            <p className="text-[#171a20]/40 text-xs font-mono tracking-[0.5em] uppercase mb-4">Orgullo Nacional</p>
+            <h2 className="text-3xl md:text-4xl font-semibold tracking-tighter mb-8 md:whitespace-nowrap">Ingeniería Global, Pasión Mexicana</h2>
+            <p className="text-stone-500 leading-relaxed text-lg font-light">Cada Modelo TT se construye con precisión quirúrgica en Tlaxcala, fusionando la tecnología más avanzada con la pasión del talento local.</p>
+          </motion.div>
+        </motion.div>
+
+        <motion.div style={{ paddingLeft: carouselPadding }} className="relative group/carousel max-w-7xl mx-auto pr-6">
+          <div ref={sliderRef} className="overflow-x-auto hide-scrollbar flex gap-6 snap-x snap-mandatory pb-8 scroll-smooth">
+            {[
+              { img: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=2000", label: "Precisión en cada milímetro", desc: "El Modelo TT nace en el corazón industrial de Tlaxcala." },
+              { img: "https://images.unsplash.com/photo-1593941707882-a5bba14938c7?auto=format&fit=crop&q=80&w=2000", label: "Ensamblado con el futuro", desc: "Excelencia técnica, orgullosamente nacional." },
+              { img: "https://images.unsplash.com/photo-1504222490345-c075b6008014?auto=format&fit=crop&q=80&w=2000", label: "Talento Tlaxcalteca", desc: "Pasión mexicana en cada componente del vehículo." }
+            ].map((slide, i) => (
+              <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8, delay: i * 0.1 }} className="min-w-[75vw] md:min-w-[70%] aspect-[21/6] flex-shrink-0 snap-start relative">
+                <div className="w-full h-full rounded-[2.5rem] overflow-hidden border border-gray-100 relative">
+                  <img src={slide.img} alt={slide.label} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-6 md:p-8">
+                    <h3 className="text-white text-xl md:text-2xl font-bold mb-2">{slide.label}</h3>
+                    <p className="text-white/70 text-xs md:text-sm font-light max-w-sm">{slide.desc}</p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          <motion.button style={{ opacity: leftButtonOpacity, pointerEvents: leftButtonPointerEvents as any }} onClick={() => scrollSlider("left")} className="absolute left-9 top-1/2 -translate-y-1/2 w-14 h-14 bg-white/70 backdrop-blur-md border border-gray-100 rounded-2xl hidden md:flex items-center justify-center shadow-xl hover:bg-white/90 transition-all active:scale-90 z-30 group">
+            <ChevronLeft className="w-6 h-6 text-[#171a20] group-hover:-translate-x-0.5 transition-transform" />
+          </motion.button>
+          <button onClick={() => scrollSlider("right")} className="absolute right-9 top-1/2 -translate-y-1/2 w-14 h-14 bg-white/70 backdrop-blur-md border border-gray-100 rounded-2xl hidden md:flex items-center justify-center shadow-xl hover:bg-white/90 transition-all active:scale-90 z-30 group">
+            <ChevronRight className="w-6 h-6 text-[#171a20] group-hover:translate-x-0.5 transition-transform" />
+          </button>
+        </motion.div>
+      </section>
+
+      {/* Extreme Specs Section */}
+      <section className="bg-black py-16 px-6 overflow-hidden border-t border-white/5">
+        <div className="max-w-5xl mx-auto">
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="mb-12">
+            <p className="text-white/30 text-[9px] font-mono tracking-[0.5em] uppercase mb-3">Ficha Técnica</p>
+            <h2 className="text-white text-2xl md:text-3xl font-light tracking-tighter italic underline decoration-white/5 underline-offset-8">Especificaciones del Modelo TT</h2>
+          </motion.div>
+          <div className="flex flex-col gap-4">
+            <div className="space-y-12">
+              <div>
+                <h3 className="text-white/60 text-[10px] font-bold uppercase tracking-[0.2em] mb-6 pb-2 border-b border-white/5 inline-block">Propulsión y Energía</h3>
+                <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-6 gap-x-8 gap-y-10">
+                  {[
+                    { label: "Autonomía (EPA)", value: "592 km" },
+                    { label: "0 a 100 km/h¹", value: "2.1s" },
+                    { label: "Velocidad máx³", value: "322 km/h" },
+                    { label: "1/4 de Milla", value: "9.23s", detail: "a 250 km/h" },
+                    { label: "Propulsión", value: "Tri Motor" },
+                    { label: "Potencia", value: "1,020 hp" },
+                    { label: "Arrastre", value: "0.23 Cd" },
+                    { label: "Supercharger", value: "250 kW" }
+                  ].map((spec, i) => (
+                    <div key={i} className="group">
+                      <div className="text-white text-xl font-light mb-0.5 group-hover:text-white/80 transition-colors">{spec.value}</div>
+                      <div className="text-white/40 text-[8px] uppercase tracking-widest font-medium mb-0.5">{spec.label}</div>
+                      {spec.detail && <div className="text-white/10 text-[9px] font-thin">{spec.detail}</div>}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start border-t border-white/5 pt-4">
+              <div>
+                <h3 className="text-white/60 text-[10px] font-bold uppercase tracking-[0.2em] mb-6 pb-2 border-b border-white/5 inline-block">Dimensiones</h3>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-y-8 gap-x-6">
+                  {[
+                    { label: "Peso", value: "2,178 kg" },
+                    { label: "Carga", value: "793 litros" },
+                    { label: "Rines", value: '19" o 21"' }
+                  ].map((spec, i) => (
+                    <div key={i}>
+                      <div className="text-white text-xl font-light mb-0.5">{spec.value}</div>
+                      <div className="text-white/40 text-[8px] uppercase tracking-widest font-medium">{spec.label}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <motion.div initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 0.7, scale: 1 }} viewport={{ once: true }} transition={{ duration: 1 }} className="relative max-w-[350px] ml-auto flex flex-col items-center z-30">
+                <img src="https://res.cloudinary.com/dpynwjc8f/image/upload/v1778792610/Disen%CC%83o_sin_ti%CC%81tulo_12_f2ydis.png" alt="TT Dimensions View" className="w-full h-auto object-contain brightness-105 contrast-120 z-10" />
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-white/5 rounded-full blur-[80px] -z-10" />
+                <motion.button whileHover={{ scale: 1.05, color: "#ffffff" }} whileTap={{ scale: 0.98 }} className="mt-8 text-white/40 text-[10px] uppercase tracking-widest transition-all border-b border-white/10 pb-1 z-30 cursor-pointer">VER FICHA TECNICA</motion.button>
+              </motion.div>
+            </div>
+
+            <div className="md:-mt-17 relative z-20">
+              <h3 className="text-white/60 text-[10px] font-bold uppercase tracking-[0.2em] mb-6 pb-2 border-b border-white/5 inline-block">Garantía</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-8 max-w-xl text-left">
+                <div>
+                  <div className="text-white text-base font-light mb-0.5">4 años u 80,000 km</div>
+                  <div className="text-white/40 text-[8px] uppercase tracking-widest font-medium">Vehículo básico</div>
+                </div>
+                <div>
+                  <div className="text-white text-base font-light mb-0.5">8 años o 240,000 km</div>
+                  <div className="text-white/40 text-[8px] uppercase tracking-widest font-medium">Batería y unidad de potencia</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-32 pt-12 border-t border-white/5 grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
+            <div className="space-y-4">
+              <p className="text-white text-[11px] leading-relaxed">1 Menos el rodaje inicial. Se requiere una suscripción por separado para ciertas funciones de conectividad.</p>
+              <p className="text-white text-[11px] leading-relaxed">3 La velocidad máxima indicada del Modelo TT Plaid requiere una actualización de hardware con costo adicional. Hasta esta actualización, la velocidad máxima será de 262 km/h.</p>
+              <p className="text-white text-[11px] leading-relaxed">Algunas funciones que utilizan gran cantidad de datos requieren conectividad estándar como mínimo. Las licencias de terceros están sujetas a cambios.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function FeatureCard({ title, description, img }: { title: string; description: string; img: string }) {
+  return (
+    <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="group cursor-pointer">
+      <div className="overflow-hidden rounded-2xl mb-6 aspect-video bg-stone-100">
+        <img src={img} alt={title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" referrerPolicy="no-referrer" />
+      </div>
+      <h4 className="text-xl font-semibold mb-3">{title}</h4>
+      <p className="text-stone-500 text-sm leading-relaxed">{description}</p>
+    </motion.div>
+  );
+}
+
+function Hotspot({ x, y, label, active, onClick }: { x: number; y: number; label: string; active: boolean; onClick: () => void }) {
+  return (
+    <div className="absolute group z-20 cursor-pointer" style={{ left: `${x}%`, top: `${y}%` }} onClick={onClick}>
+      <div className="flex items-center">
+        <div className={`relative flex items-center justify-center w-8 h-8 rounded-full transition-all duration-300 ${active ? "bg-[#171a20]" : "bg-white/80 backdrop-blur-sm"} shadow-md`}>
+          <div className={`w-2 h-2 rounded-full ${active ? "bg-white" : "bg-[#171a20]"} animate-pulse`} />
+          <div className={`absolute inset-0 rounded-full border-2 border-[#171a20]/20 animate-ping opacity-75 ${active ? "block" : "hidden"}`} />
+        </div>
+        <div className={`ml-3 px-3 py-1 bg-[#171a20] text-white text-[10px] font-bold uppercase tracking-widest rounded transition-all duration-300 opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 ${active ? "opacity-100 translate-x-0" : ""}`}>
+          {label}
+        </div>
+      </div>
+    </div>
+  );
+}
