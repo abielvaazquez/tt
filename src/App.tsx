@@ -167,7 +167,7 @@ export default function App() {
             initial={{ opacity: 0, scale: 1.05 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1.2, ease: "easeOut" }}
-            src="https://i.postimg.cc/ZKZyxCWv/Disen-o-sin-ti-tulo-(3).png"
+            src="https://i.postimg.cc/DfGdCZ13/Disen-o-sin-ti-tulo-(10).png"
             alt="Modelo TT"
             className="w-full max-w-5xl md:max-w-6xl lg:max-w-7xl object-contain drop-shadow-2xl"
           />
@@ -404,7 +404,7 @@ export default function App() {
             className="w-full max-w-5xl mb-16 overflow-hidden rounded-[2.5rem] shadow-[0_50px_100px_-20px_rgba(0,0,0,0.15)] bg-slate-100"
           >
             <img 
-              src="https://i.postimg.cc/kGDY1qMf/Disen-o-sin-ti-tulo-(9).png" 
+              src="https://i.postimg.cc/59DK0TSJ/Disen-o-sin-ti-tulo-(11).png" 
               alt="Security Architecture"
               className="w-full h-auto object-cover grayscale-[0.2] hover:grayscale-0 transition-all duration-700"
               referrerPolicy="no-referrer"
