@@ -26,7 +26,7 @@ export default function App() {
   const specs = [
     {
       category: "Aerodinámica",
-      title: "Resistencia Cero",
+      title: "Resistencia",
       description: "Cada curva del Modelo TT está diseñada para cortar el aire con un coeficiente de arrastre líder en la industria de 0.208 Cd.",
       stats: [
         { label: "Arrastre", value: "0.208 Cd" },
@@ -167,7 +167,7 @@ export default function App() {
             initial={{ opacity: 0, scale: 1.05 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1.2, ease: "easeOut" }}
-            src="https://i.postimg.cc/DfGdCZ13/Disen-o-sin-ti-tulo-(10).png"
+            src="https://res.cloudinary.com/dpynwjc8f/image/upload/f_auto,q_auto/Diseño_sin_título_10_ix7wxa"
             alt="Modelo TT"
             className="w-full max-w-5xl md:max-w-6xl lg:max-w-7xl object-contain drop-shadow-2xl"
           />
