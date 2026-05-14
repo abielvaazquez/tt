@@ -453,19 +453,19 @@ export default function App() {
       </section>
 
       {/* Tlaxcala / Hecho en México Carousel Section */}
-      <section className="bg-white py-20 overflow-hidden border-t border-gray-100">
+      <section className="bg-white py-12 overflow-hidden border-t border-gray-100">
         <motion.div 
           style={{ paddingLeft: carouselPadding }}
-          className="max-w-7xl mx-auto pr-6 mb-16"
+          className="max-w-7xl mx-auto pr-6 mb-4"
         >
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="max-w-2xl"
+            className="max-w-3xl"
           >
             <p className="text-[#171a20]/40 text-xs font-mono tracking-[0.5em] uppercase mb-4">Orgullo Nacional</p>
-            <h2 className="text-4xl md:text-5xl font-semibold tracking-tighter mb-8 italic">Ingeniería global. Alma mexicana.</h2>
+            <h2 className="text-3xl md:text-4xl font-semibold tracking-tighter mb-8 md:whitespace-nowrap">Ingeniería Global, Pasión Mexicana</h2>
             <p className="text-stone-500 leading-relaxed text-lg font-light">
               Cada Modelo TT se construye con precisión quirúrgica en Tlaxcala, fusionando la tecnología más avanzada con la pasión del talento local.
             </p>
