@@ -233,9 +233,9 @@ export default function App() {
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
             >
-              <h2 className="text-3xl font-semibold mb-6">Guárdalo todo</h2>
+              <h2 className="text-3xl font-semibold mb-6">Diseñado para el Barrio</h2>
               <p className="text-stone-600 leading-relaxed text-sm mb-8 max-w-sm">
-                Sube tu bicicleta, equipaje y más. Una puerta trasera levadiza manos libres proporciona almacenamiento flexible, mientras que los asientos de la segunda fila se pliegan totalmente para tener más espacio.
+                La ciudad es dura, pero tu coche lo es más. Combinamos la mejor tecnología con un diseño resistente que aguanta el ritmo de cualquier calle. No es solo un medio para moverte; es tu estilo marcado en cada esquina.
               </p>
               <button className="group flex items-center space-x-2 text-sm font-bold uppercase tracking-widest cursor-pointer">
                 <span className="border-b-2 border-transparent group-hover:border-[#171a20] transition-all">Más información</span>
@@ -274,7 +274,7 @@ export default function App() {
                   referrerPolicy="no-referrer"
                 />
               </div>
-              <div className="p-4 text-[11px] font-bold uppercase tracking-tighter text-[#171a20]/40">Puerta Manos Libres</div>
+              <div className="p-4 text-[11px] font-bold uppercase tracking-tighter text-[#171a20]/40">Ahorro en Gasolina</div>
             </div>
           </div>
         </div>
