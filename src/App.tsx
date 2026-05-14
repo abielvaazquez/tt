@@ -5,7 +5,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useScroll, useTransform } from "motion/react";
-import { Menu, X, ChevronRight, Globe, User, MessageCircle } from "lucide-react";
+import { Menu, X, ChevronRight, ChevronLeft, Globe, User, MessageCircle } from "lucide-react";
 
 export default function App() {
   const [scrolled, setScrolled] = useState(false);
@@ -13,6 +13,7 @@ export default function App() {
   const [activeSpec, setActiveSpec] = useState(0);
 
   const containerRef = useRef<HTMLDivElement>(null);
+  const sliderRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start end", "end start"]
@@ -22,6 +23,11 @@ export default function App() {
   const motorY = useTransform(scrollYProgress, [0.3, 0.7], [40, -40]);
   const textOpacity = useTransform(scrollYProgress, [0.35, 0.5, 0.65, 0.8], [0, 0.25, 0.25, 0]);
   const textScale = useTransform(scrollYProgress, [0.3, 0.8], [0.7, 1.8]);
+
+  const { scrollX } = useScroll({ container: sliderRef });
+  const carouselPadding = useTransform(scrollX, [0, 150], ["200px", "24px"]);
+  const leftButtonOpacity = useTransform(scrollX, [0, 50], [0, 1]);
+  const leftButtonPointerEvents = useTransform(scrollX, (v) => v > 10 ? "auto" : "none");
 
   const specs = [
     {
@@ -70,6 +76,16 @@ export default function App() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const scrollSlider = (direction: "left" | "right") => {
+    if (sliderRef.current) {
+      const scrollAmount = sliderRef.current.offsetWidth * 0.7;
+      sliderRef.current.scrollBy({
+        left: direction === "left" ? -scrollAmount : scrollAmount,
+        behavior: "smooth"
+      });
+    }
+  };
+
   const navLinks = ["Vehículos", "Descubrir"];
   const sideLinks = ["Vehículos", "Modelo TT"];
 
@@ -77,7 +93,7 @@ export default function App() {
     <div className="min-h-screen bg-white font-sans text-[#171a20] overflow-x-hidden">
       {/* Navbar */}
       <nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-12 py-5 flex items-center justify-between ${
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-12 py-3 flex items-center justify-between ${
           scrolled ? "backdrop-blur-xl bg-white/40 border-b border-white/20 shadow-sm" : "bg-transparent border-b border-transparent"
         }`}
       >
@@ -155,7 +171,10 @@ export default function App() {
           transition={{ duration: 1, delay: 0.2 }}
           className="z-10"
         >
-          <h1 className="text-5xl md:text-6xl font-semibold tracking-tight mb-2">Modelo TT</h1>
+          <h1 className="text-4xl md:text-6xl font-semibold tracking-tight mb-2">
+            <span className="md:hidden">TT Concept</span>
+            <span className="hidden md:block">Modelo TT</span>
+          </h1>
           <p className="text-sm tracking-wide text-[#171a20]/70 cursor-pointer hover:text-[#171a20] transition-colors">
             Siente el futuro del rendimiento
           </p>
@@ -164,12 +183,12 @@ export default function App() {
         <div className="flex-1 w-full flex items-center justify-center relative mt-4">
           <div className="absolute w-[800px] h-[300px] bg-gradient-to-b from-gray-100 to-transparent rounded-[100%] blur-3xl opacity-40 -z-10"></div>
           <motion.img
-            initial={{ opacity: 0, scale: 1.05 }}
-            animate={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             transition={{ duration: 1.2, ease: "easeOut" }}
             src="https://res.cloudinary.com/dpynwjc8f/image/upload/f_auto,q_auto/Diseño_sin_título_10_ix7wxa"
             alt="Modelo TT"
-            className="w-full max-w-5xl md:max-w-6xl lg:max-w-7xl object-contain drop-shadow-2xl"
+            className="w-full max-w-5xl md:max-w-6xl lg:max-w-7xl object-contain drop-shadow-2xl rounded-[3rem]"
           />
         </div>
 
@@ -202,8 +221,6 @@ export default function App() {
           </div>
         </motion.div>
         
-        {/* Detail Decoration */}
-        <div className="absolute bottom-4 right-6 text-[10px] text-gray-400 tracking-widest font-mono hidden md:block">TT_SPEC_2026_V2.0</div>
       </section>
 
       {/* Detail Section - Storage (Theme Inspired) */}
@@ -268,8 +285,8 @@ export default function App() {
         <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-16">
           <div className="w-full lg:w-3/5 relative group">
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               className="relative"
             >
@@ -432,6 +449,211 @@ export default function App() {
               </p>
             </div>
           </motion.div>
+        </div>
+      </section>
+
+      {/* Tlaxcala / Hecho en México Carousel Section */}
+      <section className="bg-white py-20 overflow-hidden border-t border-gray-100">
+        <motion.div 
+          style={{ paddingLeft: carouselPadding }}
+          className="max-w-7xl mx-auto pr-6 mb-16"
+        >
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="max-w-2xl"
+          >
+            <p className="text-[#171a20]/40 text-xs font-mono tracking-[0.5em] uppercase mb-4">Orgullo Nacional</p>
+            <h2 className="text-4xl md:text-5xl font-semibold tracking-tighter mb-8 italic">Ingeniería global. Alma mexicana.</h2>
+            <p className="text-stone-500 leading-relaxed text-lg font-light">
+              Cada Modelo TT se construye con precisión quirúrgica en Tlaxcala, fusionando la tecnología más avanzada con la pasión del talento local.
+            </p>
+          </motion.div>
+        </motion.div>
+
+        {/* Carousel with Side Arrows */}
+        <motion.div 
+          style={{ paddingLeft: carouselPadding }}
+          className="relative group/carousel max-w-7xl mx-auto pr-6"
+        >
+          <div 
+            ref={sliderRef}
+            className="overflow-x-auto hide-scrollbar flex gap-6 snap-x snap-mandatory pb-8 scroll-smooth"
+          >
+            {[
+              {
+                img: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=2000",
+                label: "Precisión en cada milímetro",
+                desc: "El Modelo TT nace en el corazón industrial de Tlaxcala."
+              },
+              {
+                img: "https://images.unsplash.com/photo-1593941707882-a5bba14938c7?auto=format&fit=crop&q=80&w=2000",
+                label: "Ensamblado con el futuro",
+                desc: "Excelencia técnica, orgullosamente nacional."
+              },
+              {
+                img: "https://images.unsplash.com/photo-1504222490345-c075b6008014?auto=format&fit=crop&q=80&w=2000",
+                label: "Talento Tlaxcalteca",
+                desc: "Pasión mexicana en cada componente del vehículo."
+              }
+            ].map((slide, i) => (
+              <motion.div 
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: i * 0.1 }}
+                className="min-w-[75vw] md:min-w-[70%] aspect-[21/6] flex-shrink-0 snap-start relative"
+              >
+                <div className="w-full h-full rounded-[2.5rem] overflow-hidden border border-gray-100 relative">
+                  <img 
+                    src={slide.img} 
+                    alt={slide.label}
+                    className="w-full h-full object-cover"
+                    referrerPolicy="no-referrer"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-6 md:p-8">
+                    <h3 className="text-white text-xl md:text-2xl font-bold mb-2">{slide.label}</h3>
+                    <p className="text-white/70 text-xs md:text-sm font-light max-w-sm">{slide.desc}</p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Navigation Arrows - Square with White Background + Blur as requested */}
+          <motion.button 
+            style={{ opacity: leftButtonOpacity, pointerEvents: leftButtonPointerEvents as any }}
+            onClick={() => scrollSlider("left")}
+            className="absolute left-9 top-1/2 -translate-y-1/2 w-14 h-14 bg-white/70 backdrop-blur-md border border-gray-100 rounded-2xl hidden md:flex items-center justify-center shadow-xl hover:bg-white/90 transition-all active:scale-90 z-30 group"
+          >
+            <ChevronLeft className="w-6 h-6 text-[#171a20] group-hover:-translate-x-0.5 transition-transform" />
+          </motion.button>
+          <button 
+            onClick={() => scrollSlider("right")}
+            className="absolute right-9 top-1/2 -translate-y-1/2 w-14 h-14 bg-white/70 backdrop-blur-md border border-gray-100 rounded-2xl hidden md:flex items-center justify-center shadow-xl hover:bg-white/90 transition-all active:scale-90 z-30 group"
+          >
+            <ChevronRight className="w-6 h-6 text-[#171a20] group-hover:translate-x-0.5 transition-transform" />
+          </button>
+        </motion.div>
+      </section>
+
+      {/* Extreme Specs Section - Black Theme */}
+      <section className="bg-black py-16 px-6 overflow-hidden border-t border-white/5">
+        <div className="max-w-5xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="mb-12"
+          >
+            <p className="text-white/30 text-[9px] font-mono tracking-[0.5em] uppercase mb-3">Ficha Técnica</p>
+            <h2 className="text-white text-2xl md:text-3xl font-light tracking-tighter italic underline decoration-white/5 underline-offset-8">Especificaciones del Modelo TT</h2>
+          </motion.div>
+          <div className="flex flex-col gap-4">
+            {/* Group 1: Propulsion & Charge (Longitudinal) */}
+            <div className="space-y-12">
+              <div>
+                <h3 className="text-white/60 text-[10px] font-bold uppercase tracking-[0.2em] mb-6 pb-2 border-b border-white/5 inline-block">Propulsión y Energía</h3>
+                <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-6 gap-x-8 gap-y-10">
+                  {[
+                    { label: "Autonomía (EPA)", value: "592 km" },
+                    { label: "0 a 100 km/h¹", value: "2.1s" },
+                    { label: "Velocidad máx³", value: "322 km/h" },
+                    { label: "1/4 de Milla", value: "9.23s", detail: "a 250 km/h" },
+                    { label: "Propulsión", value: "Tri Motor" },
+                    { label: "Potencia", value: "1,020 hp" },
+                    { label: "Arrastre", value: "0.23 Cd" },
+                    { label: "Supercharger", value: "250 kW" }
+                  ].map((spec, i) => (
+                    <div key={i} className="group">
+                      <div className="text-white text-xl font-light mb-0.5 group-hover:text-white/80 transition-colors">{spec.value}</div>
+                      <div className="text-white/40 text-[8px] uppercase tracking-widest font-medium mb-0.5">{spec.label}</div>
+                      {spec.detail && <div className="text-white/10 text-[9px] font-thin">{spec.detail}</div>}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Row 2: Dimensions & Image */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start border-t border-white/5 pt-4">
+              <div>
+                <h3 className="text-white/60 text-[10px] font-bold uppercase tracking-[0.2em] mb-6 pb-2 border-b border-white/5 inline-block">Dimensiones</h3>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-y-8 gap-x-6">
+                  {[
+                    { label: "Peso", value: "2,178 kg" },
+                    { label: "Carga", value: "793 litros" },
+                    { label: "Rines", value: '19" o 21"' }
+                  ].map((spec, i) => (
+                    <div key={i}>
+                      <div className="text-white text-xl font-light mb-0.5">{spec.value}</div>
+                      <div className="text-white/40 text-[8px] uppercase tracking-widest font-medium">{spec.label}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Image Section - Smaller and right-aligned in its cell */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 0.7, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 1 }}
+                className="relative max-w-[350px] ml-auto flex flex-col items-center z-30"
+              >
+                <img 
+                  src="https://res.cloudinary.com/dpynwjc8f/image/upload/v1778792610/Disen%CC%83o_sin_ti%CC%81tulo_12_f2ydis.png"
+                  alt="TT Dimensions View"
+                  className="w-full h-auto object-contain brightness-105 contrast-120 z-10"
+                />
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-white/5 rounded-full blur-[80px] -z-10" />
+                
+                <motion.button 
+                  whileHover={{ scale: 1.05, color: "#ffffff" }}
+                  whileTap={{ scale: 0.98 }}
+                  className="mt-8 text-white/40 text-[10px] uppercase tracking-widest transition-all border-b border-white/10 pb-1 z-30 cursor-pointer"
+                >
+                  VER FICHA TECNICA
+                </motion.button>
+              </motion.div>
+            </div>
+
+            {/* Row 3: Warranty */}
+            <div className="md:-mt-17 relative z-20">
+              <h3 className="text-white/60 text-[10px] font-bold uppercase tracking-[0.2em] mb-6 pb-2 border-b border-white/5 inline-block">Garantía</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-8 max-w-xl text-left">
+                <div>
+                  <div className="text-white text-base font-light mb-0.5">4 años u 80,000 km</div>
+                  <div className="text-white/40 text-[8px] uppercase tracking-widest font-medium">Vehículo básico</div>
+                </div>
+                <div>
+                  <div className="text-white text-base font-light mb-0.5">8 años o 240,000 km</div>
+                  <div className="text-white/40 text-[8px] uppercase tracking-widest font-medium">Batería y unidad de potencia</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          {/* Footnotes */}
+          <div className="mt-32 pt-12 border-t border-white/5 grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
+            <div className="space-y-4">
+              <p className="text-white/20 text-[11px] leading-relaxed">
+                1 Menos el rodaje inicial. Se requiere una suscripción por separado para ciertas funciones de conectividad.
+              </p>
+              <p className="text-white/20 text-[11px] leading-relaxed">
+                3 La velocidad máxima indicada del Modelo TT Plaid requiere una actualización de hardware con costo adicional. Hasta esta actualización, la velocidad máxima será de 262 km/h.
+              </p>
+              <p className="text-white/20 text-[11px] leading-relaxed">
+                Algunas funciones que utilizan gran cantidad de datos requieren conectividad estándar como mínimo. Las licencias de terceros están sujetas a cambios.
+              </p>
+            </div>
+            <div className="flex flex-col justify-end items-end">
+            </div>
+          </div>
         </div>
       </section>
 
