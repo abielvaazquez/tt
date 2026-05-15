@@ -29,13 +29,16 @@ async function startServer() {
     }
   } else {
     console.log("Production mode: serving static files from", distPath);
-    app.use(express.static(distPath));
+    app.use(express.static(distPath, {
+      maxAge: '1d',
+      index: false // We will handle index manually via the wildcard to ensure SPA behavior
+    }));
   }
 
   // CRITICAL: SPA Fallback
   // This handles refreshes on routes like /discover
   app.get("*", (req, res) => {
-    // Avoid recursion for static assets that are actually missing
+    // If it's a request for a static file that wasn't found by express.static, return a real 404
     if (req.path.includes(".") && !req.path.endsWith(".html")) {
       return res.status(404).send("Not found");
     }
@@ -43,8 +46,8 @@ async function startServer() {
     const indexPath = path.join(distPath, "index.html");
     res.sendFile(indexPath, (err) => {
       if (err) {
-        console.error("Error sending index.html:", err);
-        res.status(500).send("Index file not found. Please ensure the app is built.");
+        console.error("Critical: index.html not found at", indexPath);
+        res.status(500).send("Application shell not found. Please verify the build.");
       }
     });
   });
