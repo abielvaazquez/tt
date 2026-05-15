@@ -1,7 +1,7 @@
 import { motion } from "motion/react";
 import { Globe, Battery, Shield, Zap, Cpu, MapPin } from "lucide-react";
 
-const INNOVATION_HUB_IMAGE = "https://res.cloudinary.com/dpynwjc8f/image/upload/v1778781567/Disen%CC%83o_sin_ti%CC%81tulo_10_ix7wxa.png?auto=format&fit=crop&q=80&w=2000";
+const INNOVATION_HUB_IMAGE = "";
 
 export default function Discover() {
   return (
