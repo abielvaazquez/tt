@@ -1,6 +1,8 @@
 import { motion } from "motion/react";
 import { Globe, Battery, Shield, Zap, Cpu, MapPin } from "lucide-react";
 
+const INNOVATION_HUB_IMAGE = "https://res.cloudinary.com/dpynwjc8f/image/upload/v1778781567/Disen%CC%83o_sin_ti%CC%81tulo_10_ix7wxa.png?auto=format&fit=crop&q=80&w=2000";
+
 export default function Discover() {
   return (
     <div className="min-h-screen bg-white text-[#171a20] pt-24">
@@ -84,7 +86,7 @@ export default function Discover() {
             className="flex-1 relative"
           >
             <img 
-              src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&q=80&w=2000" 
+              src={INNOVATION_HUB_IMAGE} 
               alt="Innovation Hub"
               className="rounded-[3rem] shadow-2xl"
             />
