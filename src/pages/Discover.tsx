@@ -1,7 +1,7 @@
 import { motion } from "motion/react";
 import { Globe, Battery, Shield, Zap, Cpu, MapPin } from "lucide-react";
 
-const INNOVATION_HUB_IMAGE = "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&q=80&w=2000";
+const INNOVATION_HUB_IMAGE = "https://i.postimg.cc/wTpgtN7J/Disen-o-sin-ti-tulo-(4).png";
 
 export default function Discover() {
   return (
